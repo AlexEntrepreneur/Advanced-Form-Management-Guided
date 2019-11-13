@@ -10,7 +10,7 @@ function TestingForms(props) {
   return (
     <div className="TestingForms">
       <Form>
-        <label htmlFor="testform_username">Username </label>
+        <label htmlFor="testform_username">Username</label>
         <ErrorMessage
           name="username"
           render={msg => <div className="error">{msg}</div>}
@@ -20,8 +20,6 @@ function TestingForms(props) {
           name="username"
           id="testform_username"
           placeholder="Enter your username here"
-          // We are telling our input what its value should be
-          // It's value corresponds to its property in state
         />
 
         <label htmlFor="testform_password">Password</label>
@@ -77,6 +75,8 @@ const FormikTestingForms = withFormik({
   }),
 
   handleSubmit(values, tools) {
+    // console.log(args);
+    
     axios
       // values is our object with all our data on it.
       .post("https://reqres.in/api/users/", values)
