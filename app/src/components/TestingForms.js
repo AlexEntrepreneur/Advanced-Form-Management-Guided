@@ -5,23 +5,17 @@ export default function TestingForms() {
     username: "",
     password: "",
     remember_pass: false,
-    account_type: ""
+    account_type: "Gold Account"
   });
 
   const handleFormChange = (e) => {
-    if (e.target.type === "checkbox") {
+    // Testing our input value for whether it contains letters or is an empty string
+    if (/^[A-Za-z0-9]+$/.test(e.target.value) || e.target.value === "") {
       setTestForm({
         ...testForm,
-        [e.target.name]: e.target.checked
+        [e.target.name]:
+          e.target.type === "checkbox" ? e.target.checked : e.target.value
       });
-    } else {
-      // Testing our input value for whether it contains letters or is an empty string
-      if (/^[A-Za-z0-9]+$/.test(e.target.value) || e.target.value === "") {
-        setTestForm({
-          ...testForm,
-          [e.target.name]: e.target.value
-        });
-      }
     }
   }
   
@@ -33,9 +27,7 @@ export default function TestingForms() {
     e.persist();
     console.log(e);
     // We can log the values of each input within the form
-    console.log(e.target.username.value);
-    console.log(e.target.password.value);
-    console.log(e.target.remember_pass.value);
+    console.log(testForm);
   };
 
   return (
