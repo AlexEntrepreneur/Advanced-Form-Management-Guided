@@ -1,80 +1,89 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { withFormik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from 'yup';
+import axios from 'axios';
 
-export default function TestingForms() {
-  const [testForm, setTestForm] = useState({
-    username: "",
-    password: "",
-    remember_pass: false,
-    account_type: "Gold Account"
-  });
 
-  const handleFormChange = (e) => {
-    // Testing our input value for whether it contains letters or is an empty string
-    if (/^[A-Za-z0-9]+$/.test(e.target.value) || e.target.value === "") {
-      setTestForm({
-        ...testForm,
-        [e.target.name]:
-          e.target.type === "checkbox" ? e.target.checked : e.target.value
-      });
-    }
-  }
-  
-  const handleSubmit = e => {
-    // Preventing the form submit from refreshing the page
-    // preventing default form submission behaviour
-    e.preventDefault();
-    // For seeing all the event properties in the console
-    e.persist();
-    console.log(e);
-    // We can log the values of each input within the form
-    console.log(testForm);
-  };
-
+function TestingForms(props) {
   return (
     <div className="TestingForms">
-      <form onSubmit={handleSubmit}>
+      <Form>
         <label htmlFor="testform_username">Username </label>
-        <input
+        <ErrorMessage
+          name="username"
+          render={msg => <div className="error">{msg}</div>}
+        />
+        <Field
           type="text"
           name="username"
           id="testform_username"
           placeholder="Enter your username here"
-          onChange={handleFormChange}
           // We are telling our input what its value should be
           // It's value corresponds to its property in state
-          value={testForm.username}
         />
 
         <label htmlFor="testform_password">Password</label>
-        <input
+        <ErrorMessage
+          name="password"
+          render={msg => <div className="error">{msg}</div>}
+        />
+        <Field
           type="password"
           name="password"
           id="testform_password"
           placeholder="Enter your password here"
-          onChange={handleFormChange}
-          value={testForm.password}
         />
         <label htmlFor="testform_remember_pass">Remember password?</label>
-        <input
+        <Field
           type="checkbox"
           name="remember_pass"
           id="testform_remember_pass"
-          onChange={handleFormChange}
-          value={testForm.remember_pass}
         />
         <label htmlFor="testform_account_type">Select an account type: </label>
-        <select
+        <ErrorMessage
           name="account_type"
-          id="testform_account_type"
-          onChange={handleFormChange}
-          value={testForm.account_type}
-        >
+          render={msg => <div className="error">{msg}</div>}
+        />
+        <Field as="select" name="account_type" id="testform_account_type">
           <option>Gold Account</option>
           <option>Silver Account</option>
           <option>Bronze Account</option>
-        </select>
-        <input type="submit" />
-      </form>
+        </Field>
+        <button type="submit">Submit</button>
+      </Form>
     </div>
   );
 }
+
+const FormikTestingForms = withFormik({
+  mapPropsToValues({ username, password, remember_pass, account_type }) {
+    return {
+      username: username || "",
+      password: password || "",
+      remember_pass: remember_pass || false,
+      account_type: account_type || "Gold Account"
+    };
+  },
+
+  validationSchema: Yup.object().shape({
+    username: Yup.string().required("Please enter a username"),
+    password: Yup.string().required("Please enter a password"),
+    remember_pass: Yup.boolean(),
+    account_type: Yup.string()
+      .oneOf(["Gold Account", "Silver Account", "Bronze Account"])
+      .required("Please select an account type")
+  }),
+
+  handleSubmit(values, tools) {
+    axios
+      // values is our object with all our data on it.
+      .post("https://reqres.in/api/users/", values)
+      .then(res => {
+        console.log("server response: ", res.data);
+        tools.resetForm();
+      })
+      .catch(err => console.log(err.response));
+  }
+})(TestingForms);
+
+export default FormikTestingForms;
