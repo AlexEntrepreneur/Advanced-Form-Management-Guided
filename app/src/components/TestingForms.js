@@ -5,6 +5,8 @@ import axios from 'axios';
 
 
 function TestingForms(props) {
+  console.log(props);
+  
   return (
     <div className="TestingForms">
       <Form>
