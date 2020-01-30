@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import NoteForm from './NoteForm';
 import NotesList from './NotesList';
