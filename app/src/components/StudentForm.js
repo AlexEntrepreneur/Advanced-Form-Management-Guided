@@ -1,13 +1,8 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 export default function StudentForm() {
-  const [studentForm, setStudentForm] = useState({
-    first_name: '',
-    last_name: '',
-    username: '',
-    password: '',
-    remember_pass: false,
-  });
+  const [studentForm, setStudentForm] = useState(initialState);
 
   function onFormChange(e) {
     // console.log(e.target.name);
@@ -23,14 +18,17 @@ export default function StudentForm() {
   function handleSubmit(e){
     e.preventDefault();
     console.log(studentForm);
-    const initialState = {
-      first_name: '',
-      last_name: '',
-      username: '',
-      password: '',
-      remember_pass: false
-    }
-    setStudentForm(initialState);
+    // setStudentForm(initialState);
+    axios
+    .post('https://reqres.in/api/users/', studentForm)
+    .then(res => {
+      console.log(res);
+      setStudentForm(initialState);
+    })
+    .catch(e => console.log(e))
+    .finally(() => {
+      console.log('Axios request finished.');
+    });
   }
 
   return (
@@ -85,4 +83,12 @@ export default function StudentForm() {
       </form>
     </div>
   );
+}
+
+const initialState = {
+  first_name: '',
+  last_name: '',
+  username: '',
+  password: '',
+  remember_pass: false
 }

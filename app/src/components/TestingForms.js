@@ -22,16 +22,33 @@ export default function TestingForms() {
     // console.log(e);
 
     // Sending our form data to a server
-    axios
-      .post('https://reqres.in/api/users/', testingForm)
-      .then(res => {
-        console.log(res);
-        setTestingForms(initialState);
-      })
-      .catch(e => console.log(e))
-      .finally(() => {
-        console.log('Axios request finished.');
-      });
+    if (!formInputIsEmpty()) {
+      axios
+        .post('https://reqres.in/api/users/', testingForm)
+        .then(res => {
+          console.log(res);
+          resetFormValues();
+        })
+        .catch(e => console.log(e))
+        .finally(() => {
+          console.log('Axios request finished.');
+        });
+    } else {
+      console.log('Form is incomplete!');
+    }
+  }
+
+  function formInputIsEmpty() {
+    return (
+      testingForm.username === '' ||
+      testingForm.password === '' ||
+      testingForm.account_type === ''
+    );
+  }
+
+  function resetFormValues() {
+    // Reset the form state
+    setTestingForms(initialState);
   }
   
   return (
