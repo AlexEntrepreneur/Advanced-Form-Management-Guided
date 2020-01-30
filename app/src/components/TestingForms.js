@@ -62,6 +62,7 @@ export default function TestingForms() {
           placeholder="Enter your username here"
           onChange={changeHandler}
           value={testingForm.username}
+          required
         />
         <label htmlFor="testform_password">Password</label>
         <input
@@ -71,6 +72,7 @@ export default function TestingForms() {
           placeholder="Enter your password here"
           onChange={changeHandler}
           value={testingForm.password}
+          required
         />
         <label htmlFor="testform_remember_pass">Remember password?</label>
         <input
@@ -86,6 +88,7 @@ export default function TestingForms() {
           id="testform_account_type"
           onChange={changeHandler}
           value={testingForm.account_type}
+          required
         >
           <option value="">Select an option</option>
           <option value="gold">Gold Account</option>
