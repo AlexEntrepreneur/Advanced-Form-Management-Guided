@@ -6,7 +6,7 @@ export default function StudentForm() {
     last_name: '',
     username: '',
     password: '',
-    remember_password: false,
+    remember_pass: false,
   });
 
   function onFormChange(e) {
