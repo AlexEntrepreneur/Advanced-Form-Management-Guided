@@ -1,28 +1,17 @@
 import React, { useState } from "react";
+import axios from 'axios';
 
 export default function TestingForms() {
-  const [testingForm, setTestingForms] = useState({
-    username: '',
-    password: '',
-    remember_pass: false,
-    account_type: ''
-  });
+  const [testingForm, setTestingForms] = useState(initialState);
 
   function changeHandler(e) {
     // console.log(e.target.name);
     if (e.target.value.length < 18) {
-      if (e.target.type === 'checkbox') {
         setTestingForms({
           ...testingForm,
-          [e.target.name]: e.target.checked
-        });
-      } else {
-        setTestingForms({
-          ...testingForm,
-          [e.target.name]: e.target.value
+          [e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value
         });
       }
-    }
   }
 
   function submitHandler(e) {
@@ -30,18 +19,19 @@ export default function TestingForms() {
 
     //To see the values on our event object we can persist it
     e.persist();
-    console.log(e);
+    // console.log(e);
 
-    console.log(testingForm);
-
-    // Clearing the values in our form inputs
-    const initialState = {
-      username: '',
-      password: '',
-      remember_pass: false,
-      account_type: ''
-    }
-    setTestingForms(initialState);
+    // Sending our form data to a server
+    axios
+      .post('https://reqres.in/api/users/', testingForm)
+      .then(res => {
+        console.log(res);
+        setTestingForms(initialState);
+      })
+      .catch(e => console.log(e))
+      .finally(() => {
+        console.log('Axios request finished.');
+      });
   }
   
   return (
@@ -89,4 +79,12 @@ export default function TestingForms() {
       </form>
     </div>
   );
+}
+
+// Clearing the values in our form inputs
+const initialState = {
+  username: '',
+  password: '',
+  remember_pass: false,
+  account_type: ''
 }
