@@ -1,79 +1,91 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 export default function TestingForms() {
-  const [testForm, setTestForm] = useState({
-    username: "",
-    password: "",
+  const [testingForm, setTestingForms] = useState({
+    username: '',
+    password: '',
     remember_pass: false,
-    account_type: "Gold Account"
+    account_type: ''
   });
 
-  const handleFormChange = (e) => {
-    // Testing our input value for whether it contains letters or is an empty string
-    if (/^[A-Za-z0-9]+$/.test(e.target.value) || e.target.value === "") {
-      setTestForm({
-        ...testForm,
-        [e.target.name]:
-          e.target.type === "checkbox" ? e.target.checked : e.target.value
-      });
+  function changeHandler(e) {
+    // console.log(e.target.name);
+    if (e.target.value.length < 18) {
+      if (e.target.type === 'checkbox') {
+        setTestingForms({
+          ...testingForm,
+          [e.target.name]: e.target.checked
+        });
+      } else {
+        setTestingForms({
+          ...testingForm,
+          [e.target.name]: e.target.value
+        });
+      }
     }
   }
-  
-  const handleSubmit = e => {
-    // Preventing the form submit from refreshing the page
-    // preventing default form submission behaviour
+
+  function submitHandler(e) {
     e.preventDefault();
-    // For seeing all the event properties in the console
+
+    //To see the values on our event object we can persist it
     e.persist();
     console.log(e);
-    // We can log the values of each input within the form
-    console.log(testForm);
-  };
 
+    console.log(testingForm);
+
+    // Clearing the values in our form inputs
+    const initialState = {
+      username: '',
+      password: '',
+      remember_pass: false,
+      account_type: ''
+    }
+    setTestingForms(initialState);
+  }
+  
   return (
     <div className="TestingForms">
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="testform_username">Username </label>
+      <form onSubmit={submitHandler}>
+        <label htmlFor="testform_username">Username</label>
         <input
           type="text"
-          name="username"
           id="testform_username"
+          name="username"
           placeholder="Enter your username here"
-          onChange={handleFormChange}
-          // We are telling our input what its value should be
-          // It's value corresponds to its property in state
-          value={testForm.username}
+          onChange={changeHandler}
+          value={testingForm.username}
         />
-
         <label htmlFor="testform_password">Password</label>
         <input
           type="password"
-          name="password"
           id="testform_password"
+          name="password"
           placeholder="Enter your password here"
-          onChange={handleFormChange}
-          value={testForm.password}
+          onChange={changeHandler}
+          value={testingForm.password}
         />
         <label htmlFor="testform_remember_pass">Remember password?</label>
         <input
           type="checkbox"
-          name="remember_pass"
           id="testform_remember_pass"
-          onChange={handleFormChange}
-          value={testForm.remember_pass}
+          name="remember_pass"
+          onChange={changeHandler}
+          checked={testingForm.remember_pass}
         />
-        <label htmlFor="testform_account_type">Select an account type: </label>
+        <label htmlFor="testform_account_type">Select An Account Type: </label>
         <select
           name="account_type"
           id="testform_account_type"
-          onChange={handleFormChange}
-          value={testForm.account_type}
+          onChange={changeHandler}
+          value={testingForm.account_type}
         >
-          <option>Gold Account</option>
-          <option>Silver Account</option>
-          <option>Bronze Account</option>
+          <option value="">Select an option</option>
+          <option value="gold">Gold Account</option>
+          <option value="slvr">Silver Account</option>
+          <option value="brnz">Bronze Account</option>
         </select>
-        <input type="submit" />
+        <button type="sybmit">Submit</button>
       </form>
     </div>
   );
