@@ -1,47 +1,55 @@
 import React, { useState } from "react";
+import axios from 'axios';
 
 export default function TestingForms() {
-  const [testingForm, setTestingForms] = useState({
-    username: '',
-    password: '',
-    remember_pass: false,
-    account_type: ''
-  });
+  const [testingForm, setTestingForms] = useState(initialState);
 
   function changeHandler(e) {
+    
     // console.log(e.target.name);
     if (e.target.value.length < 18) {
-      if (e.target.type === 'checkbox') {
-        setTestingForms({
-          ...testingForm,
-          [e.target.name]: e.target.checked
-        });
-      } else {
-        setTestingForms({
-          ...testingForm,
-          [e.target.name]: e.target.value
-        });
-      }
+      setTestingForms({
+        ...testingForm,
+        [e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value
+      });
     }
+    
   }
 
   function submitHandler(e) {
     e.preventDefault();
-
-    //To see the values on our event object we can persist it
+    
+    // To see the values on our event object we can persist it
     e.persist();
-    console.log(e);
+    // console.log(e);
+    
+    // console.log(testingForm);
 
-    console.log(testingForm);
-
-    // Clearing the values in our form inputs
-    const initialState = {
-      username: '',
-      password: '',
-      remember_pass: false,
-      account_type: ''
+    // Sending our form data to an API
+    if (!inputIsEmpty()) {
+      axios
+        .post("https://reqres.in/api/users/", testingForm)
+        .then(res => {
+          console.log("Server Response: ", res.data);
+          // Clearing the values in our form inputs
+          resetForm();
+        })
+        .catch(err => console.log(err.response));
+    } else {
+      console.log('Form Incomplete!');
     }
+  }
+  
+  function resetForm() { 
     setTestingForms(initialState);
+  }
+
+  function inputIsEmpty() {
+    return (
+      testingForm.username === initialState.username ||
+      testingForm.password === initialState.password ||
+      testingForm.account_type === initialState.account_type
+    )
   }
   
   return (
@@ -89,4 +97,11 @@ export default function TestingForms() {
       </form>
     </div>
   );
+}
+
+const initialState = {
+  username: '',
+  password: '',
+  remember_pass: false,
+  account_type: ''
 }
