@@ -5,7 +5,7 @@ import axios from 'axios';
 
 
 export default function TestingForms() {
-  function submitHandler(values, tools) {
+  function submitHandler(values, actions) {
     // console.log(args);
     
     axios
@@ -13,7 +13,7 @@ export default function TestingForms() {
       .post("https://reqres.in/api/users/", values)
       .then(res => {
         console.log("server response: ", res.data);
-        tools.resetForm();
+        actions.resetForm();
       })
       .catch(err => console.log(err.response));
   }
@@ -23,55 +23,42 @@ export default function TestingForms() {
         validationSchema={validationSchema}
         initialValues={initialTestingFormValues}
         onSubmit={submitHandler}
-        render={() =>
-          <Form>
-            <label htmlFor="testform_username">Username</label>
-            <Field
-              type="text"
-              name="username"
-              id="testform_username"
-              placeholder="Enter your username here"
-            />
-            <ErrorMessage
-              name="username"
-              className="error"
-              component="div"
-            />
-            <label htmlFor="testform_password">Password</label>
-            <Field
-              type="password"
-              name="password"
-              id="testform_password"
-              placeholder="Enter your password here"
-            />
-            <ErrorMessage
-              name="password"
-              className="error"
-              component="div"
-            />
-            <label htmlFor="testform_remember_pass">Remember password?</label>
-            <Field
-              type="checkbox"
-              name="remember_pass"
-              id="testform_remember_pass"
-            />
-            <label htmlFor="testform_account_type">
-              Select an account type:{" "}
-            </label>
-            <Field as="select" name="account_type" id="testform_account_type">
-              <option>Gold Account</option>
-              <option>Silver Account</option>
-              <option>Bronze Account</option>
-            </Field>
-            <ErrorMessage
-              name="account_type"
-              className="error"
-              component="div"
-            />
-            <button type="submit">Submit</button>
-          </Form>
-        }
-      />
+      >
+        <Form>
+          <label htmlFor="testform_username">Username</label>
+          <Field
+            type="text"
+            name="username"
+            id="testform_username"
+            placeholder="Enter your username here"
+          />
+          <ErrorMessage name="username" className="error" component="div" />
+          <label htmlFor="testform_password">Password</label>
+          <Field
+            type="password"
+            name="password"
+            id="testform_password"
+            placeholder="Enter your password here"
+          />
+          <ErrorMessage name="password" className="error" component="div" />
+          <label htmlFor="testform_remember_pass">Remember password?</label>
+          <Field
+            type="checkbox"
+            name="remember_pass"
+            id="testform_remember_pass"
+          />
+          <label htmlFor="testform_account_type">
+            Select an account type:{" "}
+          </label>
+          <Field as="select" name="account_type" id="testform_account_type">
+            <option>Gold Account</option>
+            <option>Silver Account</option>
+            <option>Bronze Account</option>
+          </Field>
+          <ErrorMessage name="account_type" className="error" component="div" />
+          <button type="submit">Submit</button>
+        </Form>
+      </Formik>
     </div>
   );
 };
